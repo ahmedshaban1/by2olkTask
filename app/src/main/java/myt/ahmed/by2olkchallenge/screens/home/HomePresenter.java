@@ -7,4 +7,5 @@ package myt.ahmed.by2olkchallenge.screens.home;
 public interface HomePresenter {
     void setView(HomeView view);
     void setRequestList();
+    void setAutoCompleteList(String input);
 }

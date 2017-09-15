@@ -19,6 +19,7 @@ public class Address {
     @SerializedName("longitude")
     public double longitude;
 
+
     public int getId() {
         return id;
     }

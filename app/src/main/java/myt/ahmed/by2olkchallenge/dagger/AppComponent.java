@@ -4,7 +4,7 @@ package myt.ahmed.by2olkchallenge.dagger;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import myt.ahmed.by2olkchallenge.MainActivity;
+import myt.ahmed.by2olkchallenge.screens.home.MainActivity;
 import myt.ahmed.by2olkchallenge.screens.home.HomePresenterImpl;
 
 /**
