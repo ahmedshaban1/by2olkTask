@@ -15,7 +15,5 @@ public interface HomeView {
     void showLoader();
     void hideLoader();
     void RequestList(List<Address> addresses);
-    void showWaring(String string);
-
     void updateAutoComplete(List<Address> addressList);
 }

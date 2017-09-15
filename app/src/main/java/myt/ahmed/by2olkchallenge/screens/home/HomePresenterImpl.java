@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import myt.ahmed.by2olkchallenge.model.api.GoogleApiAutoCompleteResponseModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,7 +36,7 @@ public class HomePresenterImpl implements HomePresenter {
     @Inject
     Context context;
     int page = 0;
-    int size = 25;
+    int size = 100;
     boolean last = false;
     Subscription subscription;
 
@@ -51,16 +53,20 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public void setRequestList() {
+        view.showLoader();
         subscription = apiInterface.getLocations(page,size)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<AddressesResponse>() {
                     @Override
                     public final void onCompleted() {
+                        view.hideLoader();
                     }
 
                     @Override
                     public final void onError(Throwable e) {
+                        Toast.makeText(context,"Please Check you internet connectivity",Toast.LENGTH_LONG).show();
+
                     }
 
                     @Override
@@ -85,7 +91,8 @@ public class HomePresenterImpl implements HomePresenter {
 
                     @Override
                     public final void onError(Throwable e) {
-                        Log.e("GithubDemo", e.getMessage());
+                        Toast.makeText(context,"Please Check you internet connectivity",Toast.LENGTH_LONG).show();
+
                     }
 
                     @Override

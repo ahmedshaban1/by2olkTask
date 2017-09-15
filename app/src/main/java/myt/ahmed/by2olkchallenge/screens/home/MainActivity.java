@@ -10,6 +10,8 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.intrusoft.sectionedrecyclerview.Section;
@@ -30,6 +32,8 @@ import myt.ahmed.by2olkchallenge.model.Address;
 public class MainActivity extends AppCompatActivity implements HomeView {
     @Bind(R.id.list)
     RecyclerView listAddresses;
+    @Bind(R.id.loader)
+    ProgressBar loader;
     List<Address> addressApiList;
     List<Address> addressApiListGoogle;
     AdapterSectionRecycler adapterRecycler;
@@ -55,19 +59,18 @@ public class MainActivity extends AppCompatActivity implements HomeView {
         adapterRecycler = new AdapterSectionRecycler(this, sections);
         listAddresses.setAdapter(adapterRecycler);
         presenter.setRequestList();
-        presenter.setAutoCompleteList("ri");
 
 
     }
 
     @Override
     public void showLoader() {
-
+        loader.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoader() {
-
+        loader.setVisibility(View.GONE);
     }
 
     @Override
@@ -77,13 +80,11 @@ public class MainActivity extends AppCompatActivity implements HomeView {
 
     }
 
-    @Override
-    public void showWaring(String string) {
 
-    }
 
     @Override
     public void updateAutoComplete(List<Address> addressList) {
+        addressApiListGoogle.clear();
         addressApiListGoogle.addAll(addressList);
         adapterRecycler.notifyDataChanged(sections);
     }
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements HomeView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.home, menu);
+        menuInflater.inflate(R.menu.menu, menu);
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
 
@@ -118,7 +119,8 @@ public class MainActivity extends AppCompatActivity implements HomeView {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Search(query);
+                presenter.setAutoCompleteList(query);
+
                 if( ! finalSearchView.isIconified()) {
                     finalSearchView.setIconified(true);
                 }
@@ -127,19 +129,12 @@ public class MainActivity extends AppCompatActivity implements HomeView {
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                Search(s);
+                presenter.setAutoCompleteList(s);
                 return false;
             }
         });
 
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                Toast.makeText(ListData.this, "Closed", Toast.LENGTH_SHORT).show();
-                ResetList();
-                return false;
-            }
-        });
+
 
         return super.onCreateOptionsMenu(menu);
     }
